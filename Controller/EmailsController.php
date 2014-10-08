@@ -13,7 +13,12 @@ class EmailsController extends AppController {
     
     var $components = array("RequestHandler");
     
-    public function index(){}
+    public function index(){
+    	$emails = $this->Email->find("all");
+    	
+    	$email_list = Hash::extract($emails, "{n}.Email.email");
+    	$this->set(compact("emails", "email_list"));
+    }
     
     public function subscribe(){
 
@@ -27,7 +32,7 @@ class EmailsController extends AppController {
                 return new CakeResponse(array(
                     'body'=> json_encode(
                         array(
-                            'message'=> 'Votre adresse a été inscrite avec succès'
+                            'message'=> 'Votre adresse a Ã©tÃ© inscrite avec succÃ¨s'
                     )),
                     'status'=>200
                 ));
