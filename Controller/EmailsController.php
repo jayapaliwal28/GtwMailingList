@@ -16,8 +16,7 @@ class EmailsController extends AppController {
     public function index(){
     	$emails = $this->Email->find("all");
     	
-    	$email_list = Hash::extract($emails, "{n}.Email.email");
-    	$this->set(compact("emails", "email_list"));
+    	$this->set(compact("emails"));
     }
     
     public function subscribe(){
@@ -32,7 +31,7 @@ class EmailsController extends AppController {
                 return new CakeResponse(array(
                     'body'=> json_encode(
                         array(
-                            'message'=> 'Votre adresse a Ã©tÃ© inscrite avec succÃ¨s'
+                            'message'=> 'Votre adresse a été inscrite avec succès'
                     )),
                     'status'=>200
                 ));
@@ -46,6 +45,40 @@ class EmailsController extends AppController {
             )),
             'status'=>200
         ));
+    }
+    
+    public function admin_mail($to = array()){
+    	if($to){
+    		$emails = $this->Email->find("all", array('conditions' => array('id' => $to)));
+    	} else {
+    		$emails = $this->Email->find("all");
+    	}
+    	
+    	$email_list = '';
+    	//extract emails
+    	if($emails)
+    		$email_list = Hash::extract($emails, "{n}.Email.email");
+    	
+    	if ($this->request->is('post')) {
+    		App::uses('CakeEmail', 'Network/Email');
+    		$email = new CakeEmail();
+    		 
+    		$email->emailFormat('html');
+    		 
+    		$email->from(Configure::read('Gtw.admin_mail'));
+    		$email->bcc($email_list);
+    		$email->subject($this->request->data['Email']['subject']);
+    		$response = $email->send($this->request->data['Email']['body']);
+    		$this->Session->setFlash(__('Email sent successfully'), 'alert', array(
+    				'plugin' => 'BoostCake',
+    				'class' => 'alert-success'
+    		));
+    		return $this->redirect(array('action' => 'index'));
+    	}
+    	
+    	
+    	
+    	$this->set(compact("emails", "email_list"));
     }
     
 }

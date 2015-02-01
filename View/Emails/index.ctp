@@ -3,7 +3,7 @@
 	<div class="panel-heading">
 		<div class="row">
 			<div class="col-md-8"><h3 style='margin-top:0px'>Mailing List</h3></div>
-			<div class="col-md-4 text-right"><?php echo $this->Html->link('<i class="fa fa-reply-all"></i> Email All','mailto:?bcc='. implode(',', $email_list), array("class" => "btn btn-primary", "escape" => false)); ?></div>
+			<div class="col-md-4 text-right"><?php echo $this->Html->link('<i class="fa fa-reply-all"></i> Email All',array('action' => "admin_mail"), array("class" => "btn btn-primary", "escape" => false)); ?></div>
 		</div>
 	</div>
 	<table class="table table-hover table-striped table-bordered">
@@ -34,7 +34,7 @@
 						</td>
 						<td class="text-center">
 							<span class="text-left">
-								<?php echo $this->Html->link('<i class="fa fa-envelope"></i>','mailto:'. $email['Email']['email'], array( "escape" => false)); ?>
+								<?php echo $this->Html->link('<i class="fa fa-envelope"></i>',array('action' => "admin_mail", $email['Email']['id']) , array( "escape" => false)); ?>
 							</span>
 						</td>
 					</tr>
